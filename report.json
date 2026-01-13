@@ -1,0 +1,70 @@
+{
+  "summary": {
+    "total_issues": 4,
+    "high": 4,
+    "medium": 0,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "Parameters: quantity",
+      "issue_type": "Incorrect Parameter Constraint",
+      "severity": "High",
+      "documented_behavior": "quantity is optional (marked 'no') with range 0–10",
+      "actual_behavior": "quantity is required and must be between 1 and 5 inclusive; throws Error if outside this range",
+      "citations": {
+        "doc": "README.md, Parameters table: 'quantity | number | no | Number of items (0–10)'",
+        "code": "api.ts lines 17-20: 'if (input.quantity < 1 || input.quantity > 5) { throw new Error(\"Invalid quantity\"); }'"
+      },
+      "fix_summary": "Changed quantity to required (yes), updated range from 0–10 to 1–5, added error documentation"
+    },
+    {
+      "id": 2,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "Parameters: couponCode",
+      "issue_type": "Incorrect Parameter Required Status",
+      "severity": "High",
+      "documented_behavior": "couponCode is required (marked 'yes')",
+      "actual_behavior": "couponCode is optional, indicated by '?' in CreateOrderInput interface",
+      "citations": {
+        "doc": "README.md, Parameters table: 'couponCode | string | yes | Discount coupon code'",
+        "code": "api.ts line 5: 'couponCode?: string;' (the '?' indicates optional)"
+      },
+      "fix_summary": "Changed couponCode to optional (no)"
+    },
+    {
+      "id": 3,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "Returns",
+      "issue_type": "Incorrect Return Type Structure",
+      "severity": "High",
+      "documented_behavior": "Returns { success: boolean; orderId?: string; }",
+      "actual_behavior": "Returns { orderId: string; totalPrice: number; } - no success field, totalPrice is always present",
+      "citations": {
+        "doc": "README.md, Returns section: '{ success: boolean; orderId?: string; }'",
+        "code": "api.ts lines 22-25: 'return { orderId: \"ORD-001\", totalPrice: input.quantity * 100 };'"
+      },
+      "fix_summary": "Updated return type to match actual return: { orderId: string; totalPrice: number; }"
+    },
+    {
+      "id": 4,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "Function behavior",
+      "issue_type": "Missing Error Documentation",
+      "severity": "High",
+      "documented_behavior": "No error cases documented",
+      "actual_behavior": "Throws Error('Invalid quantity') when quantity < 1 or quantity > 5",
+      "citations": {
+        "doc": "README.md: No Errors section present",
+        "code": "api.ts lines 14-16: JSDoc comment mentions 'Throws error if quantitys' with constraints, and lines 17-20 implement the throw"
+      },
+      "fix_summary": "Added Errors section documenting the Invalid quantity exception"
+    }
+  ]
+}
