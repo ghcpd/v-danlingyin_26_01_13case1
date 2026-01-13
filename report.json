@@ -1,0 +1,85 @@
+{
+  "summary": {
+    "total_issues": 5,
+    "high": 3,
+    "medium": 1,
+    "low": 1
+  },
+  "details": [
+    {
+      "id": 1,
+      "api_name": "createOrder",
+      "doc_file": "README_backup.md",
+      "section": "Parameters (quantity)",
+      "issue_type": "Incorrect / incomplete parameter definition",
+      "severity": "High",
+      "documented_behavior": "quantity: number — not required; range stated as 0–10",
+      "actual_behavior": "`quantity` is required (CreateOrderInput.quantity) and runtime-validated to be in the range 1..5 (throws Error if outside)",
+      "citations": {
+        "doc": "README_backup.md — Parameters table row: `| quantity | number | no | Number of items (0–10) |`",
+        "code": "api.ts lines 3-7 (interface) and lines 20-23 (validation + throw)"
+      },
+      "fix_summary": "Mark `quantity` as required; correct valid range to 1–5 inclusive; document that invalid values throw Error(\"Invalid quantity\")."
+    },
+    {
+      "id": 2,
+      "api_name": "createOrder",
+      "doc_file": "README_backup.md",
+      "section": "Parameters (couponCode)",
+      "issue_type": "Incorrect 'required' flag",
+      "severity": "Medium",
+      "documented_behavior": "couponCode listed as required",
+      "actual_behavior": "`couponCode` is optional in the implementation (couponCode?: string)",
+      "citations": {
+        "doc": "README_backup.md — Parameters table row: `| couponCode | string | yes | Discount coupon code |`",
+        "code": "api.ts lines 3-7 (interface: `couponCode?: string`) — specifically line 6"
+      },
+      "fix_summary": "Mark `couponCode` as optional in the documentation and provide an example both with and without a coupon code."
+    },
+    {
+      "id": 3,
+      "api_name": "createOrder",
+      "doc_file": "README_backup.md",
+      "section": "Returns",
+      "issue_type": "Incorrect return value structure",
+      "severity": "High",
+      "documented_behavior": "Returns `{ success: boolean; orderId?: string }`",
+      "actual_behavior": "Returns `{ orderId: string; totalPrice: number }` (OrderResult); `success` is not returned and `totalPrice` is missing from docs",
+      "citations": {
+        "doc": "README_backup.md — Returns code block: `{ success: boolean; orderId?: string; }`",
+        "code": "api.ts lines 9-11 (OrderResult interface) and lines 25-27 (returned object)"
+      },
+      "fix_summary": "Update return documentation to `OrderResult` with `orderId: string` and `totalPrice: number` and provide an example response."
+    },
+    {
+      "id": 4,
+      "api_name": "createOrder",
+      "doc_file": "README_backup.md",
+      "section": "Errors / Constraints",
+      "issue_type": "Missing error / constraint documentation",
+      "severity": "High",
+      "documented_behavior": "No error conditions or runtime validation are documented",
+      "actual_behavior": "Function throws `Error(\"Invalid quantity\")` when `quantity < 1` or `quantity > 5` (runtime validation present)",
+      "citations": {
+        "doc": "README_backup.md — (no Errors section; Parameters table incorrectly documents range)",
+        "code": "api.ts lines 20-23 (validation and throw)"
+      },
+      "fix_summary": "Add an Errors section that documents the exact conditions that cause the function to throw and the thrown message."
+    },
+    {
+      "id": 5,
+      "api_name": "createOrder",
+      "doc_file": "README_backup.md",
+      "section": "General / format",
+      "issue_type": "Documentation format ambiguity",
+      "severity": "Low",
+      "documented_behavior": "Documentation presents a generic API table but does not state whether this is an HTTP endpoint or a library function",
+      "actual_behavior": "Implementation is a synchronous TypeScript function (not an HTTP endpoint) — there are therefore no HTTP status codes to document",
+      "citations": {
+        "doc": "README_backup.md — overall file (no statement that this is a library function)",
+        "code": "api.ts lines 20-29 (synchronous function implementation)"
+      },
+      "fix_summary": "Make explicit that `createOrder` is a synchronous TS function and therefore has no HTTP status codes; if an HTTP wrapper exists, document its contract separately."
+    }
+  ]
+}
