@@ -1,0 +1,85 @@
+{
+  "summary": {
+    "total_issues": 5,
+    "high": 4,
+    "medium": 1,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "Parameters",
+      "issue_type": "Incorrect parameter definition",
+      "severity": "High",
+      "documented_behavior": "quantity is optional (Required: no)",
+      "actual_behavior": "quantity is required",
+      "citations": {
+        "doc": "README.md, line 10: | quantity | number | no | Number of items (0–10) |",
+        "code": "api.ts, line 4: quantity: number;"
+      },
+      "fix_summary": "Changed Required from 'no' to 'yes'"
+    },
+    {
+      "id": 2,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "Parameters",
+      "issue_type": "Incorrect parameter constraint",
+      "severity": "High",
+      "documented_behavior": "quantity range 0–10",
+      "actual_behavior": "quantity must be 1–5, throws error otherwise",
+      "citations": {
+        "doc": "README.md, line 10: Number of items (0–10)",
+        "code": "api.ts, lines 15-17: if (input.quantity < 1 || input.quantity > 5) { throw new Error(\"Invalid quantity\"); }"
+      },
+      "fix_summary": "Updated description to 'Number of items (1–5)'"
+    },
+    {
+      "id": 3,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "Parameters",
+      "issue_type": "Incorrect parameter definition",
+      "severity": "Medium",
+      "documented_behavior": "couponCode is required (Required: yes)",
+      "actual_behavior": "couponCode is optional",
+      "citations": {
+        "doc": "README.md, line 11: | couponCode | string | yes | Discount coupon code |",
+        "code": "api.ts, line 5: couponCode?: string;"
+      },
+      "fix_summary": "Changed Required from 'yes' to 'no'"
+    },
+    {
+      "id": 4,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "Returns",
+      "issue_type": "Incorrect return value structure",
+      "severity": "High",
+      "documented_behavior": "Returns { success: boolean; orderId?: string; }",
+      "actual_behavior": "Returns { orderId: string; totalPrice: number; }",
+      "citations": {
+        "doc": "README.md, lines 14-18: ```ts { success: boolean; orderId?: string; } ```",
+        "code": "api.ts, lines 8-10: interface OrderResult { orderId: string; totalPrice: number; }; lines 19-22: return { orderId: \"ORD-001\", totalPrice: input.quantity * 100 }"
+      },
+      "fix_summary": "Replaced return type with correct structure"
+    },
+    {
+      "id": 5,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "Errors",
+      "issue_type": "Missing error cases",
+      "severity": "High",
+      "documented_behavior": "No errors documented",
+      "actual_behavior": "Throws error for invalid quantity",
+      "citations": {
+        "doc": "README.md: No Errors section",
+        "code": "api.ts, lines 15-17: if (input.quantity < 1 || input.quantity > 5) { throw new Error(\"Invalid quantity\"); }"
+      },
+      "fix_summary": "Added Errors section documenting the thrown error"
+    }
+  ]
+}
