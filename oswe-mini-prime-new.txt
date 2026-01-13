@@ -1,0 +1,185 @@
+oswe-mini-prime-new     ：：
+User: prompt
+Prompt — Documentation & Knowledge (API Docs)
+You are a senior backend engineer and API documentation auditor.
+Your task is to audit API documentation and verify whether the documented API contracts match the actual implementation in the source code.
+--------------------------------------------------------------------------------
+Your responsibilities:
+1.Identify incorrect or incomplete API documentation
+- Review all provided API documentation files (e.g. README.md, docs/api.md)
+- Review corresponding source code implementations
+- Identify mismatches including:
+- Incorrect parameter definitions (type, required/optional)
+- Incorrect return value structure
+- Missing error cases or exceptions
+- Missing or incorrect HTTP status codes
+- Missing constraints enforced in code
+For each issue, report:
+- Documentation file name
+- API name / endpoint / function name
+- Section or heading
+- What the documentation states
+- What the code actually does
+--------------------------------------------------------------------------------
+2.Provide citation evidence (MANDATORY)
+For every issue, provide exact citations:
+- Documentation citation:
+- File name + section heading or quoted text
+- Code citation:
+- File name + exact line numbers
+--------------------------------------------------------------------------------
+3.Classify severity
+Classify each issue as:
+- High — causes incorrect API usage, runtime error, or integration failure
+- Medium — misleading but may still work
+- Low — incomplete or unclear but technically minor
+--------------------------------------------------------------------------------
+4.Produce corrected API documentation
+Generate:
+- README_backup.md → unchanged copy of original documentation
+- README.md → corrected API documentation that matches code behavior exactly
+Rules:
+- MUST NOT modify any source code
+- Only documentation may be changed
+- All API contracts must be precise and explicit
+--------------------------------------------------------------------------------
+5.Generate API documentation audit report (report.json)
+{
+  "summary": {
+    "total_issues": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "details": [
+    {
+      "id": 1,
+      "api_name": "createOrder",
+      "doc_file": "README.md",
+      "section": "API: createOrder",
+      "issue_type": "Incorrect API Documentation",
+      "severity": "High",
+      "documented_behavior": "",
+      "actual_behavior": "",
+      "citations": {
+        "doc": "",
+        "code": ""
+      },
+      "fix_summary": ""
+    }
+  ]
+}
+
+--------------------------------------------------------------------------------
+6.Generate citation evidence file
+Produce citations.md containing:
+- Side-by-side comparison:
+- Documented API contract
+- Actual code implementation
+- Clear explanation of each mismatch
+--------------------------------------------------------------------------------
+7.Generate audit README
+Produce AUDIT_README.md explaining:
+- Scope of the API audit
+- Types of API documentation issues found
+- How citations were extracted
+- How reviewers can manually verify correctness
+--------------------------------------------------------------------------------
+📌 Rules for the Model
+- MUST NOT hallucinate APIs not present in code
+- MUST NOT invent documentation files
+- MUST provide exact citations (file + line numbers or quoted text)
+- MUST NOT modify source code
+- MUST reason strictly from provided files
+- MUST keep output structured, minimal, and verifiable
+
+GitHub Copilot: Next: I'll read the README.md and api.ts files to identify mismatches.
+
+Read [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/26.1/1.13/case1/oswe-mini-prime-new/README.md)
+
+Read [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/26.1/1.13/case1/oswe-mini-prime-new/api.ts)
+
+Finding: I located 4 documentation issues (3 High, 1 Medium) between README.md and api.ts. Next I'll create a backup of the README, write the corrected README, and add the audit artifacts (`report.json`, `citations.md`, `AUDIT_README.md`).
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/26.1/1.13/case1/oswe-mini-prime-new/README_backup.md)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/26.1/1.13/case1/oswe-mini-prime-new/README.md)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/26.1/1.13/case1/oswe-mini-prime-new/report.json)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/26.1/1.13/case1/oswe-mini-prime-new/citations.md)
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/26.1/1.13/case1/oswe-mini-prime-new/AUDIT_README.md)
+
+Next: I'll update the existing README.md in-place to match the corrected documentation (backup already created).
+
+Using "Replace String in File"
+
+
+```
+
+```
+## Audit Summary ✅
+
+- **Scope:** README.md vs api.ts (project root)  
+- **Findings:** 4 issues found — **3 High**, **1 Medium**.  
+- **Artifacts created:** README_backup.md, updated README.md, report.json, citations.md, AUDIT_README.md.
+
+---
+
+## Issues (concise) 🔍
+
+1. **quantity: documented optional & range (0–10) — but code requires 1–5** — **High**  
+   - Documentation citation: README.md — table row:  
+     `| quantity | number | no | Number of items (0–10) |` (README.md lines 11–12)  
+   - Code citation: api.ts — interface & runtime check:  
+     `quantity: number;` (api.ts line 5) and  
+     `if (input.quantity < 1 || input.quantity > 5) { throw new Error("Invalid quantity"); }` (api.ts lines 21–23)
+
+2. **couponCode: documented required but implemented optional** — **Medium**  
+   - Documentation citation: README.md — table row:  
+     `| couponCode | string | yes | Discount coupon code |` (README.md line 13)  
+   - Code citation: api.ts — optional property: `couponCode?: string;` (api.ts line 6)
+
+3. **Return structure mismatch (docs claim `{ success, orderId? }` but code returns `{ orderId, totalPrice }`)** — **High**  
+   - Documentation citation: README.md returns block:  
+     `success: boolean; orderId?: string;` (README.md lines 17–21)  
+   - Code citation: api.ts — `OrderResult` and `return`:  
+     `export interface OrderResult { orderId: string; totalPrice: number }` (api.ts lines 9–11) and `return { orderId: "ORD-001", totalPrice: input.quantity * 100 }` (api.ts lines 25–28)
+
+4. **Missing Errors/Throws documentation for invalid quantity** — **High**  
+   - Documentation citation: README.md — no `Throws`/`Errors` section present (README.md overall)  
+   - Code citation: api.ts — thrown error: `throw new Error("Invalid quantity");` (api.ts lines 21–23)
+
+---
+
+## What I changed 🔧
+
+- Created README_backup.md (unchanged original)  
+- Replaced README.md with corrected documentation that:
+  - marks `quantity` as **required** and documents the **1–5** range and thrown error,
+  - marks `couponCode` as **optional**,
+  - updates Returns to `{ orderId: string; totalPrice: number }`,
+  - adds a **Throws** section and a note about `totalPrice = quantity * 100`.
+
+All changes were **documentation-only** (no source code edited).
+
+---
+
+## Where to review 📂
+
+- README.md — updated documentation (review to confirm wording)  
+- README_backup.md — original doc preserved  
+- report.json — machine-readable audit report with issue details  
+- citations.md — side-by-side evidence and explanations  
+- AUDIT_README.md — scope, extraction method, verification steps
+
+---
+
+If you'd like, I can:
+- open a PR that contains these docs changes, or
+- run a quick unit test suggestion for documenting the contract in code comments.
+
+Would you like me to prepare a PR or add suggested test cases?
+
+Made changes.
